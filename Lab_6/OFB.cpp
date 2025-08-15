@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <cuchar>
 
 using namespace std;
 
@@ -314,6 +315,9 @@ int main(){
         BytesToMatrix(plain_text);
         encrypt_block(cypher_text);
     }
+    cout << endl;
+    
+    cout << "Зашифрованный текст:" << endl;
     
     for (unsigned char r : cypher_text){
         cout << hex << static_cast<unsigned int>(r) << '\t';
