@@ -5,7 +5,6 @@
 #include <chrono>
 #include <thread>
 #include <iomanip>
-#include <algorithm>
 #include <numeric>
 
 using namespace std;
