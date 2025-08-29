@@ -148,28 +148,27 @@ vector<double> solveSeidel(const vector<vector<double>>& A, const vector<double>
     cout << "k\tx1\t\tx2\t\tx3\t\tx4\t\t||x(k+1)-x(k)||" << endl;
 
     do {
-        x_old = x_new;  // Сохраняем предыдущее приближение для вычисления нормы
+        x_old = x_new;
 
-        // Вычисление нового приближения по методу Зейделя
-        // Формула (19): x_i^(k) = 1/a_ii * (f_i - сумма a_ij * x_j)
+       
         for (int i = 0; i < n; i++) {
             double sum = 0.0;
             
-            // Сумма с уже вычисленными значениями x_new[j] для j < i (текущая итерация)
+         
             for (int j = 0; j < i; j++) {
                 sum += A[i][j] * x_new[j];
             }
             
-            // Сумма со старыми значениями x_old[j] для j > i (предыдущая итерация)
+
             for (int j = i + 1; j < n; j++) {
                 sum += A[i][j] * x_old[j];
             }
             
-            // Вычисляем новое значение согласно формуле (19)
+
             x_new[i] = (b[i] - sum) / A[i][i];
         }
 
-        // Вычисление нормы разности
+  
         double norm = 0.0;
         for (int i = 0; i < n; i++) {
             norm = max(norm, abs(x_new[i] - x_old[i]));
@@ -212,7 +211,6 @@ void printOriginalSystem(const vector<vector<double>>& A, const vector<double>& 
 }
 
 int main() {
-    // Система уравнений с подставленными значениями M=-1.21, N=0.2, P=0.88
     int n = 4;
     vector<vector<double>> A = {
         {-1.21, -0.04,  0.21, -18.0},
@@ -224,14 +222,14 @@ int main() {
     
     printOriginalSystem(A, b, n);
 
-    // Решение методом LU-разложения
+
     vector<double> solution_lu = solveLU(A, b, n);
     if (!solution_lu.empty()) {
         cout << "\nРешение методом LU-разложения:" << endl;
         cout << solution_lu << endl;
     }
 
-    // Решение методом простой итерации
+
     vector<double> solution_seidel = solveSeidel(A, b, n);
     if (!solution_seidel.empty()) {
         cout << "\nРешение методом простой итерации:" << endl;
