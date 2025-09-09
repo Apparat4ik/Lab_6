@@ -50,7 +50,7 @@ vector<double> solveLU(vector<vector<double>> A, vector<double> b, int n) {
         for (int k = i; k < n; k++) {
             double sum = 0.0;
             for (int j = 0; j < i; j++) {
-                sum += L[i][j] * U[j][k];
+                sum += L[i][k] * U[j][k];
             }
             U[i][k] = A[i][k] - sum;
         }
