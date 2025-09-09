@@ -52,9 +52,15 @@ vector<vector<uint8_t>> Rcon = {
 vector<vector<uint8_t>> State = {};
 vector<vector<uint8_t>> IV;
 
-vector<vector<uint8_t>> Cypher_text = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+vector<vector<uint8_t>> Cypher_text = {{0, 0, 0, 0},
+                                       {0, 0, 0, 0},
+                                       {0, 0, 0, 0},
+                                       {0, 0, 0, 0}};
 
-vector<vector<uint8_t>> Text_block = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+vector<vector<uint8_t>> Text_block = {{0, 0, 0, 0},
+                                      {0, 0, 0, 0},
+                                      {0, 0, 0, 0},
+                                      {0, 0, 0, 0}};
 
 
 vector<vector<uint8_t>> MC_table = {
@@ -118,8 +124,8 @@ void GenMasterKey(const string& filename){
     
     out_file.close();
     
-    cout << "New Master key saved to " << filename << endl;
-    cout << "Master key: " << endl;
+    cout << "Мастер-ключ сгенерирован в файл: " << filename << endl;
+    cout << "Мастер-ключ: " << endl;
     for (uint8_t w : master_key){
         cout << hex << setw(2) << setfill('0') << (int)w << ' ';
     }
@@ -151,7 +157,7 @@ void expand_key(const string& filename){
         for (int i = 0; i < 4; i++){
             Keys[num].push_back(vector<uint8_t>());
             Keys[num][0].push_back(Keys[num - 1][0][i] ^ RotWord(Keys[num - 1][3])[i] ^ Rcon[num - 1][i]);
-        }
+        }  // xor-ит первую строку предыдущего ключа, его же последнюю строку, сдвинутую вправо и строку Rcon
         
         
         for (int i = 1; i <= 3; i++){
@@ -176,15 +182,15 @@ void SubBytes(){
 uint8_t Gmul(uint8_t a, uint8_t b) {
     uint8_t result = 0;
     for (int i = 0; i < 8; i++) {
-        if (b & 1) {
+        if (b & 1) {  // если младший бит = 1, то в result пишется a
             result ^= a;
         }
         bool carry = (a & 0x80);
-        a <<= 1;
+        a <<= 1; // сдвиг a влево (домножение на x)
         if (carry) {
-            a ^= 0x11B;
+            a ^= 0x11B;  // если число больше 128, то берем по модулю неприводимого многочлена
         }
-        b >>= 1;
+        b >>= 1; // сдвиг вправо для обработки всех множителей b
     }
     return result;
 }
@@ -198,7 +204,7 @@ void MixColumns(){
         for (int row = 0; row < 4; row++){
             uint8_t summ = 0;
             for (int i = 0; i < 4; i++){
-                summ ^= Gmul(State[i][col], MC_table[row][i]);
+                summ ^= Gmul(State[i][col], MC_table[row][i]);  // перемножаем матрицы
             }
             new_matrix[row].push_back(summ);
         }
