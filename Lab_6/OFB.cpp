@@ -134,6 +134,9 @@ void GenMasterKey(const string& filename){
 }
 
 
+
+
+
 void expand_key(const string& filename){
     ifstream mk_file(filename, ios::binary);
     uint8_t master_key[16];
@@ -156,7 +159,10 @@ void expand_key(const string& filename){
         Keys.push_back(vector<vector<uint8_t>>());
         for (int i = 0; i < 4; i++){
             Keys[num].push_back(vector<uint8_t>());
-            Keys[num][0].push_back(Keys[num - 1][0][i] ^ RotWord(Keys[num - 1][3])[i] ^ Rcon[num - 1][i]);
+            for (uint8_t w : RotWord(Keys[num - 1][3])){
+                w = Sbox[w];
+                Keys[num][0].push_back(Keys[num - 1][0][i] ^ w ^ Rcon[num - 1][i]);
+            }
         }  // xor-ит первую строку предыдущего ключа, его же последнюю строку, сдвинутую вправо и строку Rcon
         
         
